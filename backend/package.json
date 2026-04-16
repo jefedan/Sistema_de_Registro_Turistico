@@ -1,0 +1,7 @@
+
+{
+"name":"turismopro-backend",
+"version":"1.0.0",
+"scripts":{"start":"node src/main.js"},
+"dependencies":{"express":"^4.18.2","pdfkit":"^0.13.0","bcrypt":"^5.1.0","pg":"^8.11.0"}
+}

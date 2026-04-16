@@ -1,0 +1,20 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: turismopro
+spec:
+ replicas: 2
+ selector:
+  matchLabels:
+   app: turismopro
+ template:
+  metadata:
+   labels:
+    app: turismopro
+  spec:
+   containers:
+   - name: backend
+     image: turismopro
+     ports:
+     - containerPort: 3000
