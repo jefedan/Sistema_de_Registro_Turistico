@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { Plus, Edit2, Trash2, X } from 'lucide-react';
 
@@ -14,53 +14,67 @@ interface Destination {
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const [destinations, setDestinations] = useState<Destination[]>([
-    {
-      id: '1',
-      name: 'Salar de Uyuni',
-      region: 'Potosí y Oruro',
-      category: 'Natural',
-      visitors: 50000,
-      price: 50,
-      description: 'El mayor salar del mundo'
-    },
-    {
-      id: '2',
-      name: 'La Paz',
-      region: 'La Paz',
-      category: 'Urban',
-      visitors: 80000,
-      price: 20,
-      description: 'Capital administrativa'
-    },
-    {
-      id: '3',
-      name: 'Isla del Sol',
-      region: 'La Paz',
-      category: 'Cultural',
-      visitors: 35000,
-      price: 30,
-      description: 'Isla sagrada en el Lago Titicaca'
-    },
-    {
-      id: '4',
-      name: 'Parque Nacional Madidi',
-      region: 'Beni',
-      category: 'Adventure',
-      visitors: 25000,
-      price: 60,
-      description: 'Área biodiversa del mundo'
-    },
-    {
-      id: '5',
-      name: 'Potosí - Cerro Rico',
-      region: 'Potosí',
-      category: 'Cultural',
-      visitors: 40000,
-      price: 35,
-      description: 'Montaña emblemática'
+  const [destinations, setDestinations] = useState<Destination[]>(() => {
+    const saved = localStorage.getItem('destinations');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        localStorage.removeItem('destinations');
+      }
     }
-  ]);
+    return [
+      {
+        id: '1',
+        name: 'Salar de Uyuni',
+        region: 'Potosí y Oruro',
+        category: 'Natural',
+        visitors: 50000,
+        price: 50,
+        description: 'El mayor salar del mundo'
+      },
+      {
+        id: '2',
+        name: 'La Paz',
+        region: 'La Paz',
+        category: 'Urban',
+        visitors: 80000,
+        price: 20,
+        description: 'Capital administrativa'
+      },
+      {
+        id: '3',
+        name: 'Isla del Sol',
+        region: 'La Paz',
+        category: 'Cultural',
+        visitors: 35000,
+        price: 30,
+        description: 'Isla sagrada en el Lago Titicaca'
+      },
+      {
+        id: '4',
+        name: 'Parque Nacional Madidi',
+        region: 'Beni',
+        category: 'Adventure',
+        visitors: 25000,
+        price: 60,
+        description: 'Área biodiversa del mundo'
+      },
+      {
+        id: '5',
+        name: 'Potosí - Cerro Rico',
+        region: 'Potosí',
+        category: 'Cultural',
+        visitors: 40000,
+        price: 35,
+        description: 'Montaña emblemática'
+      }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('destinations', JSON.stringify(destinations));
+  }, [destinations]);
 
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -245,3 +259,4 @@ export const Dashboard: React.FC = () => {
     </div>
   );
 };
+
