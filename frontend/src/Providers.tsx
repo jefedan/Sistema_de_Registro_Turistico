@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 
 interface Provider {
@@ -13,11 +13,25 @@ interface Provider {
 }
 
 export const Providers: React.FC = () => {
-  const [providers, setProviders] = useState<Provider[]>([
-    { id: '1', name: 'Uyuni Turismo', type: 'Tour', destination: 'Salar', rating: 4.8, price: 250, contact: 'uyuni@tour.com', phone: '+591-2-2445678' },
-    { id: '2', name: 'Hotel Luna', type: 'Hotel', destination: 'Salar', rating: 4.6, price: 120, contact: 'luna@hotel.com', phone: '+591-2-2441000' },
-    { id: '3', name: 'Plaza Mayor', type: 'Hotel', destination: 'La Paz', rating: 4.7, price: 180, contact: 'plaza@hotel.com', phone: '+591-2-2312345' }
-  ]);
+  const [providers, setProviders] = useState<Provider[]>(() => {
+    const saved = localStorage.getItem('providers');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        localStorage.removeItem('providers');
+      }
+    }
+    return [
+      { id: '1', name: 'Uyuni Turismo', type: 'Tour', destination: 'Salar', rating: 4.8, price: 250, contact: 'uyuni@tour.com', phone: '+591-2-2445678' },
+      { id: '2', name: 'Hotel Luna', type: 'Hotel', destination: 'Salar', rating: 4.6, price: 120, contact: 'luna@hotel.com', phone: '+591-2-2441000' },
+      { id: '3', name: 'Plaza Mayor', type: 'Hotel', destination: 'La Paz', rating: 4.7, price: 180, contact: 'plaza@hotel.com', phone: '+591-2-2312345' }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('providers', JSON.stringify(providers));
+  }, [providers]);
 
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -126,3 +140,4 @@ export const Providers: React.FC = () => {
     </div>
   );
 };
+
