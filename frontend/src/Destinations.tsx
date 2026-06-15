@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 
 interface Destination {
@@ -12,13 +12,27 @@ interface Destination {
 }
 
 export const Destinations: React.FC = () => {
-  const [destinations, setDestinations] = useState<Destination[]>([
-    { id: '1', name: 'Salar de Uyuni', region: 'Potosí', category: 'Natural', visitors: 50000, price: 50, description: 'El mayor salar' },
-    { id: '2', name: 'La Paz', region: 'La Paz', category: 'Urban', visitors: 80000, price: 20, description: 'Capital' },
-    { id: '3', name: 'Isla del Sol', region: 'La Paz', category: 'Cultural', visitors: 35000, price: 30, description: 'Sagrada' },
-    { id: '4', name: 'Madidi', region: 'Beni', category: 'Adventure', visitors: 25000, price: 60, description: 'Biodiversa' },
-    { id: '5', name: 'Potosí', region: 'Potosí', category: 'Cultural', visitors: 40000, price: 35, description: 'Histórica' }
-  ]);
+  const [destinations, setDestinations] = useState<Destination[]>(() => {
+    const saved = localStorage.getItem('destinations_list');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        localStorage.removeItem('destinations_list');
+      }
+    }
+    return [
+      { id: '1', name: 'Salar de Uyuni', region: 'Potosí', category: 'Natural', visitors: 50000, price: 50, description: 'El mayor salar' },
+      { id: '2', name: 'La Paz', region: 'La Paz', category: 'Urban', visitors: 80000, price: 20, description: 'Capital' },
+      { id: '3', name: 'Isla del Sol', region: 'La Paz', category: 'Cultural', visitors: 35000, price: 30, description: 'Sagrada' },
+      { id: '4', name: 'Madidi', region: 'Beni', category: 'Adventure', visitors: 25000, price: 60, description: 'Biodiversa' },
+      { id: '5', name: 'Potosí', region: 'Potosí', category: 'Cultural', visitors: 40000, price: 35, description: 'Histórica' }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('destinations_list', JSON.stringify(destinations));
+  }, [destinations]);
 
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -111,3 +125,4 @@ export const Destinations: React.FC = () => {
     </div>
   );
 };
+
