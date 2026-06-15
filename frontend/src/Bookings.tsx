@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Download, Eye } from 'lucide-react';
 import { generateTouristReceiptPDF, TouristReceipt } from './PDFService';
 
@@ -17,34 +17,48 @@ interface Booking {
 }
 
 export const Bookings: React.FC = () => {
-  const [bookings, setBookings] = useState<Booking[]>([
-    {
-      id: '1',
-      firstName: 'Juan',
-      lastName: 'Pérez',
-      email: 'juan@example.com',
-      destination: 'Salar de Uyuni',
-      provider: 'Uyuni Turismo Premium',
-      checkIn: '2024-05-15',
-      checkOut: '2024-05-18',
-      guests: 2,
-      totalPrice: 720,
-      reference: 'BKG-001-2024'
-    },
-    {
-      id: '2',
-      firstName: 'María',
-      lastName: 'García',
-      email: 'maria@example.com',
-      destination: 'La Paz',
-      provider: 'Hotel Plaza Mayor',
-      checkIn: '2024-06-01',
-      checkOut: '2024-06-03',
-      guests: 1,
-      totalPrice: 240,
-      reference: 'BKG-002-2024'
+  const [bookings, setBookings] = useState<Booking[]>(() => {
+    const saved = localStorage.getItem('bookings');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        localStorage.removeItem('bookings');
+      }
     }
-  ]);
+    return [
+      {
+        id: '1',
+        firstName: 'Juan',
+        lastName: 'Pérez',
+        email: 'juan@example.com',
+        destination: 'Salar de Uyuni',
+        provider: 'Uyuni Turismo Premium',
+        checkIn: '2024-05-15',
+        checkOut: '2024-05-18',
+        guests: 2,
+        totalPrice: 720,
+        reference: 'BKG-001-2024'
+      },
+      {
+        id: '2',
+        firstName: 'María',
+        lastName: 'García',
+        email: 'maria@example.com',
+        destination: 'La Paz',
+        provider: 'Hotel Plaza Mayor',
+        checkIn: '2024-06-01',
+        checkOut: '2024-06-03',
+        guests: 1,
+        totalPrice: 240,
+        reference: 'BKG-002-2024'
+      }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('bookings', JSON.stringify(bookings));
+  }, [bookings]);
 
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -245,3 +259,4 @@ export const Bookings: React.FC = () => {
     </div>
   );
 };
+
